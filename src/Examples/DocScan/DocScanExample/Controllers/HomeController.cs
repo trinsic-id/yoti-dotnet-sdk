@@ -43,7 +43,7 @@ namespace DocScanExample.Controllers
             //Build Session Spec
             var sessionSpec = new SessionSpecificationBuilder()
                 .WithClientSessionTokenTtl(600)
-                .WithResourcesTtl(96400)
+                .WithResourcesTtl(90400)
                 .WithUserTrackingId("some-user-tracking-id")
                 //Add Checks (using builders)
                 .WithRequestedCheck(
@@ -83,7 +83,6 @@ namespace DocScanExample.Controllers
                     new RequestedTextExtractionTaskBuilder()
                     .WithManualCheckFallback()
                     .WithChipDataDesired()
-                    .WithCreateExpandedDocumentFields()
                     .Build()
                 )
                 .WithRequestedTask(
@@ -108,7 +107,6 @@ namespace DocScanExample.Controllers
                     .Build()
                     )
                 //Add Required Documents (with builders)
-                .WithCreateIdentityProfilePreview(true)
                 .WithRequiredDocument(
                     new RequiredIdDocumentBuilder()
                     .WithFilter(

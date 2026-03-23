@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 using Yoti.Auth.DocScan.Session.Create.Check;
 using Yoti.Auth.DocScan.Session.Create.Filter;
 using Yoti.Auth.DocScan.Session.Create.Task;
 
 namespace Yoti.Auth.DocScan.Session.Create
-{ 
-
+{
     public class SessionSpecificationBuilder
     {
         private readonly List<BaseRequestedCheck> _requestedChecks = new List<BaseRequestedCheck>();
@@ -23,7 +21,8 @@ namespace Yoti.Auth.DocScan.Session.Create
         private object _identityProfileRequirements;
         private object _subject;
         private bool _createIdentityProfilePreview;
-        private AdvancedIdentityProfile _advancedIdentityProfileRequirements;
+        private object _advancedIdentityProfileRequirements;
+        private ResourceCreationContainer _resources;
 
         /// <summary>
         /// Sets the client session token TTL (time-to-live)
@@ -183,12 +182,23 @@ namespace Yoti.Auth.DocScan.Session.Create
         /// </summary>
         /// <param name="advancedIdentityProfileRequirements">The Advanced Identity Profile Requirements <see cref="object"/> for the session</param>
         /// <returns>the builder</returns>
-        public SessionSpecificationBuilder WithAdvancedIdentityProfileRequirements(AdvancedIdentityProfile profile)
+        public SessionSpecificationBuilder WithAdvancedIdentityProfileRequirements(object advancedIdentityProfileRequirements)
         {
-            _advancedIdentityProfileRequirements = profile; 
+            _advancedIdentityProfileRequirements = advancedIdentityProfileRequirements;
             return this;
         }
-        
+
+        /// <summary>
+        /// Sets the <see cref="ResourceCreationContainer"/> for the session
+        /// </summary>
+        /// <param name="resources">The <see cref="ResourceCreationContainer"/> for the session</param>
+        /// <returns>the builder</returns>
+        public SessionSpecificationBuilder WithResources(ResourceCreationContainer resources)
+        {
+            _resources = resources;
+            return this;
+        }
+
         /// <summary>
         /// Builds the <see cref="SessionSpecification"/> based on the values supplied to the builder
         /// </summary>
@@ -209,7 +219,8 @@ namespace Yoti.Auth.DocScan.Session.Create
                 _identityProfileRequirements,
                 _subject,
                 _createIdentityProfilePreview,
-                _advancedIdentityProfileRequirements
+                _advancedIdentityProfileRequirements,
+                _resources
                 );
         }
     }

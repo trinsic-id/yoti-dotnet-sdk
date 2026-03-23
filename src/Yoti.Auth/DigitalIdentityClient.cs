@@ -4,7 +4,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Org.BouncyCastle.Crypto;
 using Yoti.Auth.DigitalIdentity;
-using Yoti.Auth.Web;
 
 namespace Yoti.Auth
 {
@@ -66,10 +65,10 @@ namespace Yoti.Auth
         /// Details of the device's callback endpoint, <see
         /// cref="Yoti.Auth.DigitalIdentity.Policy"/> and extensions for the application
         /// </param>
-        /// <returns><see cref="YotiHttpResponse{ShareSessionResult}"/> with response headers</returns>
-        public YotiHttpResponse<ShareSessionResult> CreateShareSession(ShareSessionRequest shareSessionRequest)
+        /// <returns><see cref="ShareSessionResult"/></returns>
+        public ShareSessionResult CreateShareSession(ShareSessionRequest shareSessionRequest)
         {
-            Task<YotiHttpResponse<ShareSessionResult>> task = Task.Run(async () => await CreateShareSessionAsync(shareSessionRequest).ConfigureAwait(false));
+            Task<ShareSessionResult> task = Task.Run(async () => await CreateShareSessionAsync(shareSessionRequest).ConfigureAwait(false));
 
             return task.Result;
         }
@@ -81,21 +80,22 @@ namespace Yoti.Auth
         /// Details of the device's callback endpoint, <see
         /// cref="Yoti.Auth.DigitalIdentity.Policy"/> and extensions for the application
         /// </param>
-        /// <returns><see cref="YotiHttpResponse{ShareSessionResult}"/> with response headers</returns>
-        public async Task<YotiHttpResponse<ShareSessionResult>> CreateShareSessionAsync(ShareSessionRequest shareSessionRequest)
+        /// <returns><see cref="ShareSessionResult"/></returns>
+        public async Task<ShareSessionResult> CreateShareSessionAsync(ShareSessionRequest shareSessionRequest)
         {
             return await _yotiDigitalClientEngine.CreateShareSessionAsync(_sdkId, _keyPair, ApiUri, shareSessionRequest).ConfigureAwait(false);
         }
 
-        public YotiHttpResponse<SharedReceiptResponse> GetShareReceipt(string receiptId)
+        public SharedReceiptResponse GetShareReceipt(string receiptId)
         {
-            Task<YotiHttpResponse<SharedReceiptResponse>> task = Task.Run(async () => await _yotiDigitalClientEngine.GetShareReceipt(_sdkId, _keyPair, ApiUri, receiptId).ConfigureAwait(false));
+            Task<SharedReceiptResponse> task = Task.Run(async () => await _yotiDigitalClientEngine.GetShareReceipt(_sdkId, _keyPair, ApiUri, receiptId).ConfigureAwait(false));
             return task.Result;
         }
-
-        public async Task<CreateQrResult> CreateQrCode(string sessionId)
+        
+        
+        public async Task<CreateQrResult> CreateQrCode(string sessionId, QrRequest qrRequest)
         {
-            return await _yotiDigitalClientEngine.CreateQrCodeAsync(_sdkId, _keyPair, ApiUri, sessionId).ConfigureAwait(false);
+            return await _yotiDigitalClientEngine.CreateQrCodeAsync(_sdkId, _keyPair, ApiUri, sessionId, qrRequest).ConfigureAwait(false);
         }
         
         public async Task<GetQrCodeResult> GetQrCode(string qrCodeId)
@@ -107,7 +107,6 @@ namespace Yoti.Auth
         {
             return await _yotiDigitalClientEngine.GetSession(_sdkId, _keyPair, ApiUri, sessionId).ConfigureAwait(false);
         }
-
 
         internal void SetYotiApiUri()
         {

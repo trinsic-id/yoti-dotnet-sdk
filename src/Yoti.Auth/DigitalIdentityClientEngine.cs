@@ -6,7 +6,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Org.BouncyCastle.Crypto;
 using Yoti.Auth.DigitalIdentity;
-using Yoti.Auth.Web;
 
 namespace Yoti.Auth
 {
@@ -18,33 +17,33 @@ namespace Yoti.Auth
         {
             _httpClient = httpClient;
 
-#if NET452 || NET462 || NET472 || NET48
+            #if NET452 || NET462 || NET472 || NET48
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-#endif
+            #endif
         }
-
-        public async Task<YotiHttpResponse<ShareSessionResult>> CreateShareSessionAsync(string sdkId, AsymmetricCipherKeyPair keyPair, Uri apiUrl, ShareSessionRequest shareSessionRequest)
+        
+        public async Task<ShareSessionResult> CreateShareSessionAsync(string sdkId, AsymmetricCipherKeyPair keyPair, Uri apiUrl, ShareSessionRequest shareSessionRequest)
         {
-            YotiHttpResponse<ShareSessionResult> result = await Task.Run(async () => await DigitalIdentityService.CreateShareSessionWithHeaders(
+            ShareSessionResult result = await Task.Run(async () => await DigitalIdentityService.CreateShareSession(
                 _httpClient, apiUrl, sdkId, keyPair, shareSessionRequest).ConfigureAwait(false))
                 .ConfigureAwait(false);
 
             return result;
         }
 
-        public async Task<YotiHttpResponse<SharedReceiptResponse>> GetShareReceipt(string sdkId, AsymmetricCipherKeyPair keyPair, Uri apiUrl, string receiptId)
+        public async Task<SharedReceiptResponse> GetShareReceipt(string sdkId, AsymmetricCipherKeyPair keyPair, Uri apiUrl, string receiptId)
         {
-            YotiHttpResponse<SharedReceiptResponse> result = await Task.Run(async () => await DigitalIdentityService.GetShareReceiptWithHeaders(
+            SharedReceiptResponse result = await Task.Run(async () => await DigitalIdentityService.GetShareReceipt(
                 _httpClient, sdkId, apiUrl, keyPair, receiptId).ConfigureAwait(false))
                 .ConfigureAwait(false);
 
             return result;
         }
         
-        public async Task<CreateQrResult> CreateQrCodeAsync(string sdkId, AsymmetricCipherKeyPair keyPair, Uri apiUrl, string sessionid)
+        public async Task<CreateQrResult> CreateQrCodeAsync(string sdkId, AsymmetricCipherKeyPair keyPair, Uri apiUrl, string sessionid, QrRequest qRRequest)
         {
             CreateQrResult result = await Task.Run(async () => await DigitalIdentityService.CreateQrCode(
-                    _httpClient, apiUrl, sdkId, keyPair, sessionid).ConfigureAwait(false))
+                    _httpClient, apiUrl, sdkId, keyPair, sessionid, qRRequest).ConfigureAwait(false))
                 .ConfigureAwait(false);
 
             return result;
