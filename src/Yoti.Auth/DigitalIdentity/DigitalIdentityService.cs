@@ -102,6 +102,7 @@ namespace Yoti.Auth.DigitalIdentity
             Validation.NotNull(apiUrl, nameof(apiUrl));
             Validation.NotNull(sdkId, nameof(sdkId));
             Validation.NotNull(keyPair, nameof(keyPair));
+            Validation.NotNull(sessionId, nameof(sessionId));
 
             string serializedQrCode = JsonConvert.SerializeObject(
                 qrRequestPayload,
