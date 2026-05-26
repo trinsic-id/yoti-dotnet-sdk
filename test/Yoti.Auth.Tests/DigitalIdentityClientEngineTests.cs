@@ -62,6 +62,19 @@ namespace Yoti.Auth.Tests
         }
 
         [TestMethod]
+        public async Task CreateQrCodeAsyncShouldThrowArgumentNullExceptionWhenSessionIdIsNull()
+        {
+            Mock<HttpMessageHandler> handlerMock = SetupMockMessageHandler(
+                HttpStatusCode.OK,
+                "{\"id\":\"test-qr-code-id\",\"uri\":\"https://code.yoti.com/test\"}");
+            var engine = new DigitalIdentityClientEngine(new HttpClient(handlerMock.Object));
+            QrRequest qrRequest = TestTools.CreateQr.CreateQrStandard();
+            ArgumentNullException exception = await Assert.ThrowsExceptionAsync<ArgumentNullException>(
+                () => engine.CreateQrCodeAsync(SdkId, _keyPair, new Uri(Constants.Api.DefaultYotiShareApiUrl), null, qrRequest));
+            Assert.AreEqual("sessionId", exception.ParamName);
+        }
+
+        [TestMethod]
         public async Task GetQrCodeAsyncShouldReturnCorrectValues()
         {
             string qrCodeId = "test-qr-code-id";

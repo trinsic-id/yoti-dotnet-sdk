@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Yoti.Auth;
@@ -22,7 +23,7 @@ namespace DigitalIdentityExample.Controllers
        
         // GET: /generate-share
         [Route("generate-share")]
-        public IActionResult DigitalIdentity()
+        public async Task<IActionResult> DigitalIdentity()
         {
             try
             {
@@ -72,6 +73,18 @@ namespace DigitalIdentityExample.Controllers
                 var sharedReceiptResponse = new SharedReceiptResponse();
                 ViewBag.YotiClientSdkId = _clientSdkId;
                 ViewBag.sessionID = SessionResult.Id;
+
+            var qr = await yotiClient.CreateQrCode(SessionResult.Id, new QrRequest());
+             Console.WriteLine($"Id: {qr.Id}");
+  Console.WriteLine($"Uri: {qr.Uri}");
+
+
+
+var fetched = await yotiClient.GetQrCode(qr.Id);
+
+  Console.WriteLine($"Id: {fetched.Id}");
+  Console.WriteLine($"Session Id: {fetched.Session?.Id}");
+
 
                 return View("DigitalIdentity", sharedReceiptResponse);
             }
