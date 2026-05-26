@@ -74,18 +74,6 @@ namespace DigitalIdentityExample.Controllers
                 ViewBag.YotiClientSdkId = _clientSdkId;
                 ViewBag.sessionID = SessionResult.Id;
 
-            var qr = await yotiClient.CreateQrCode(SessionResult.Id, new QrRequest());
-             Console.WriteLine($"Id: {qr.Id}");
-  Console.WriteLine($"Uri: {qr.Uri}");
-
-
-
-var fetched = await yotiClient.GetQrCode(qr.Id);
-
-  Console.WriteLine($"Id: {fetched.Id}");
-  Console.WriteLine($"Session Id: {fetched.Session?.Id}");
-
-
                 return View("DigitalIdentity", sharedReceiptResponse);
             }
             catch (Exception e)
