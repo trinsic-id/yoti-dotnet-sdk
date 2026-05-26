@@ -58,6 +58,20 @@ namespace Yoti.Auth.Tests
             Assert.IsNotNull(result);
             Assert.AreEqual(qrCodeId, result.Id);
             Assert.AreEqual(qrCodeUri, result.Uri);
+            Assert.IsTrue(_httpRequestMessage.RequestUri.AbsolutePath.EndsWith($"/v2/sessions/{sessionId}/qr-codes"));
+        }
+
+        [TestMethod]
+        public async Task CreateQrCodeAsyncShouldThrowArgumentNullExceptionWhenSessionIdIsNull()
+        {
+            Mock<HttpMessageHandler> handlerMock = SetupMockMessageHandler(
+                HttpStatusCode.OK,
+                "{\"id\":\"test-qr-code-id\",\"uri\":\"https://code.yoti.com/test\"}");
+            var engine = new DigitalIdentityClientEngine(new HttpClient(handlerMock.Object));
+            QrRequest qrRequest = TestTools.CreateQr.CreateQrStandard();
+            ArgumentNullException exception = await Assert.ThrowsExceptionAsync<ArgumentNullException>(
+                () => engine.CreateQrCodeAsync(SdkId, _keyPair, new Uri(Constants.Api.DefaultYotiShareApiUrl), null, qrRequest));
+            Assert.AreEqual("sessionId", exception.ParamName);
         }
 
         [TestMethod]
@@ -79,6 +93,7 @@ namespace Yoti.Auth.Tests
             Assert.AreEqual(qrCodeId, result.Id);
             Assert.AreEqual(expiry, result.Expiry);
             Assert.AreEqual(policy, result.Policy);
+            Assert.IsTrue(_httpRequestMessage.RequestUri.AbsolutePath.EndsWith($"/v2/qr-codes/{qrCodeId}"));
         }
 
         [TestMethod]
