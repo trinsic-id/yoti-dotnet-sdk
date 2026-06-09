@@ -79,7 +79,7 @@ namespace Yoti.Auth.Anchors
                     foreach (object innerObj in obj)
                     {
                         Asn1TaggedObject seqObject = (Asn1TaggedObject)innerObj;
-                        Asn1OctetString octetString = Asn1OctetString.GetInstance(obj: seqObject, isExplicit: false);
+                        Asn1OctetString octetString = Asn1OctetString.GetInstance(seqObject, false);
 
                         extensionStrings.Add(System.Text.Encoding.UTF8.GetString(octetString.GetOctets()));
                     }
